@@ -38,6 +38,26 @@
                 }
             }
         });
+
+        AFRAME.registerComponent('video-vidhandlerqr', {
+            init: function () {
+                console.log('video init entered');
+                this.toggle = false;
+                this.vid = document.querySelector("#recuerdoqr");
+                this.vid.pause();
+            },
+            tick: function () {
+                if (this.el.object3D.visible == true) {
+                    if (!this.toggle) {
+                        this.toggle = true;
+                        this.vid.play();
+                    }
+                } else {
+                    this.toggle = false;
+                    this.vid.pause();
+                }
+            }
+        });
     </script>
 </head>
 
@@ -55,16 +75,31 @@
 
         </a-assets>
 
+        <a-assets>
+            <!-- Recuerdo  Video -->
+
+            <video preload="none" id="recuerdoqr" response-type="arraybuffer" loop="false" crossorigin webkit-playsinline
+                playsinline controls>
+                <source src="asset/video/recuerdo.mp4">
+            </video>
+
+        </a-assets>
+
         <!-- recuerdo Video Marker -->
 
-        <a-marker id="marker1" type='pattern' url='asset/marker/default.patt' video-vidhandler>
+        <a-marker id="marker1" type='pattern' url='asset/marker/recuerdoqr.patt' video-vidhandler>
             <!--<a-box position='0 0 0' material='color: red;'></a-box>-->
             <a-plane scale="4 2" position='0 0.1 0' rotation="-90 0 0" material='transparent:true;src:#recuerdo'
                 controls></a-plane>
             <!--<a-entity text="font: https://cdn.aframe.io/fonts/mozillavr.fnt; value: Fun Moments"></a-entity>-->
         </a-marker>
 
-
+        <a-marker id="marker2" type='pattern' url='asset/marker/recuerdo.patt' video-vidhandler>
+            <!--<a-box position='0 0 0' material='color: red;'></a-box>-->
+            <a-plane scale="4 2" position='0 0.1 0' rotation="-90 0 0" material='transparent:true;src:#recuerdo'
+                controls></a-plane>
+            <!--<a-entity text="font: https://cdn.aframe.io/fonts/mozillavr.fnt; value: Fun Moments"></a-entity>-->
+        </a-marker>
         <!-- Camera -->
 
         <a-entity camera></a-entity>
