@@ -1,94 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <!--
-      This is the page head - it contains info the browser uses to display the page
-      You won't see what's in the head in the page
-      Scroll down to the body element for the page content
-    -->
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="https://glitch.com/favicon.ico" />
+    <title> AR recuerdo </title>
+    <meta name="viewport" content="width=device-width,height=device-height">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"
+        id="bootstrap-css">
 
-  <!-- 
-      This is an HTML comment
-      You can write text in a comment and the content won't be visible in the page
-    -->
-
-  <title>Hello World!</title>
-
-  <!-- Meta tags for SEO and social sharing -->
-  <script
-    src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.5/aframe/build/aframe-ar.js"></script>
 
 
-  <script>
-    window.onload = function () {
-      AFRAME.registerComponent('videohandler', {
-        init: function () {
-          var marker = this.el;
+    <script>
 
-          this.vid = document.querySelector("#vid");
+        // recuerdo Video Handler
 
-          marker.addEventListener('markerFound', function () {
-            this.vid.play();
-          }.bind(this));
-
-          marker.addEventListener('markerLost', function () {
-            this.vid.pause();
-            this.vid.currentTime = 0;
-          }.bind(this));
-        }
-      });
-    };
-  </script>
-  <style>
-    .arjs-loader {
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .arjs-loader div {
-      text-align: center;
-      font-size: 1.25em;
-      color: white;
-    }
-  </style>
+        AFRAME.registerComponent('video-vidhandler', {
+            init: function () {
+                console.log('video init entered');
+                this.toggle = false;
+                this.vid = document.querySelector("#recuerdo");
+                this.vid.pause();
+            },
+            tick: function () {
+                if (this.el.object3D.visible == true) {
+                    if (!this.toggle) {
+                        this.toggle = true;
+                        this.vid.play();
+                    }
+                } else {
+                    this.toggle = false;
+                    this.vid.pause();
+                }
+            }
+        });
+    </script>
 </head>
 
-<body style='margin : 0px; overflow: hidden;'>
-  <div class="arjs-loader">
-    <div>Loading, please wait...</div>
-  </div>
-  <a-scene vr-mode-ui="enabled: false;" renderer='antialias: true; alpha: true; precision: medium;' embedded
-    arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
+<body>
 
-    <a-assets>
-      <video src="https://cdn.glitch.global/0297c919-0e98-4870-bf9c-ca25fd81156e/recuerdo.mp4?v=1654570245927"
-        preload="auto" id="vid" response-type="arraybuffer" loop crossorigin webkit-playsinline autoplay muted
-        playsinline>
-      </video>
-    </a-assets>
+    <a-scene id="scene" arjs='trackingMethod: best; debugUIEnabled: false;' vr-mode-ui="enabled: false" ar-template>
 
-    <a-nft videohandler type='nft'
-      url='https://raw.githubusercontent.com/javiercode/evento-bautizo/main/asset/nft/qrAR-recuerdo'
-      smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-      <a-video src="#vid" position='50 150 100' rotation='90 0 180' width='300' height='175'>
-      </a-video>
-    </a-nft>
-    <a-entity camera></a-entity>
-  </a-scene>
+        <a-assets>
+            <!-- Recuerdo  Video -->
+
+            <video preload="none" id="recuerdo" response-type="arraybuffer" loop="false" crossorigin webkit-playsinline
+                playsinline controls>
+                <source src="asset/video/recuerdo.mp4">
+            </video>
+
+        </a-assets>
+
+
+
+        <!-- recuerdo Video Marker -->
+
+        <a-marker id="marker1" type='pattern' url='asset/marker/recuerdo.patt' video-vidhandler>
+            <!--<a-box position='0 0 0' material='color: red;'></a-box>-->
+            <a-plane scale="4 2" position='0 0.1 0' rotation="-90 0 0" material='transparent:true;src:#recuerdo'
+                controls></a-plane>
+            <!--<a-entity text="font: https://cdn.aframe.io/fonts/mozillavr.fnt; value: Fun Moments"></a-entity>-->
+        </a-marker>
+
+
+        <!-- Camera -->
+
+        <a-entity camera></a-entity>
+
+    </a-scene>
+
+
 </body>
 
 </html>
